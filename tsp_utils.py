@@ -28,3 +28,17 @@ def afficher_villes(villes):
 
 afficher_villes(villes)
 
+import math
+
+def calculer_matrice_distances(villes):
+    n = len(villes)
+    distances = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                xi, yi = villes[i]
+                xj, yj = villes[j]
+                distances[i][j] = math.dist((xi, yi), (xj, yj))
+    return distances
+
+
