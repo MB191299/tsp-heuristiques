@@ -1,5 +1,7 @@
 import random
 import matplotlib.pyplot as plt
+import time
+import math
 
 # Générer n villes aléatoires dans un carré de 100x100
 def generer_villes(n, largeur=100, hauteur=100):
@@ -10,8 +12,6 @@ def generer_villes(n, largeur=100, hauteur=100):
         villes.append((x, y))
     return villes
 
-# Exemple : générer 10 villes
-villes = generer_villes(10)
 
 # Affichage
 def afficher_villes(villes):
@@ -26,9 +26,6 @@ def afficher_villes(villes):
     plt.grid(True)
     plt.show()
 
-afficher_villes(villes)
-
-import math
 
 def calculer_matrice_distances(villes):
     n = len(villes)
@@ -41,4 +38,32 @@ def calculer_matrice_distances(villes):
                 distances[i][j] = math.dist((xi, yi), (xj, yj))
     return distances
 
+# Heuristique : Plus proche voisin
+def nearest_neighbor(villes, distances):
+    start_time = time.time()
 
+    n = len(villes)
+    visited = [False] * n
+    chemin = [0]  # Commencer à la ville 0
+    visited[0] = True
+    total_distance = 0
+
+    current = 0
+    for _ in range(n - 1):
+        next_city = None
+        min_dist = float('inf')
+        for j in range(n):
+            if not visited[j] and distances[current][j] < min_dist:
+                next_city = j
+                min_dist = distances[current][j]
+        chemin.append(next_city)
+        total_distance += min_dist
+        visited[next_city] = True
+        current = next_city
+
+    # Retour à la ville de départ
+    total_distance += distances[current][0]
+    chemin.append(0)
+
+    execution_time = time.time() - start_time
+    return chemin, total_distance, execution_time
