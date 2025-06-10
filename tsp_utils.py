@@ -67,3 +67,53 @@ def nearest_neighbor(villes, distances):
 
     execution_time = time.time() - start_time
     return chemin, total_distance, execution_time
+
+# Heuristique d'Insertion
+def insertion_heuristique(villes, distances):
+    import time
+    start_time = time.time()
+    n = len(villes)
+
+    non_visitees = list(range(n))
+    tour = [0, 1, 0]  # On commence avec les villes 0 → 1 → 0
+    non_visitees.remove(0)
+    non_visitees.remove(1)
+
+    while non_visitees:
+        meilleur_cout = float('inf')
+        meilleure_ville = None
+        meilleure_position = None
+
+        for ville in non_visitees:
+            for i in range(1, len(tour)):
+                a = tour[i - 1]
+                b = tour[i]
+                cout = distances[a][ville] + distances[ville][b] - distances[a][b]
+                if cout < meilleur_cout:
+                    meilleur_cout = cout
+                    meilleure_ville = ville
+                    meilleure_position = i
+
+        tour.insert(meilleure_position, meilleure_ville)
+        non_visitees.remove(meilleure_ville)
+
+    # Calcul de la distance totale
+    total_distance = 0
+    for i in range(len(tour) - 1):
+        total_distance += distances[tour[i]][tour[i + 1]]
+
+    execution_time = time.time() - start_time
+    return tour, total_distance, execution_time
+
+# Comparaison avec Nearest Neighbor
+def comparer_heuristiques(villes, distances):
+    chemin_nn, dist_nn, t_nn = nearest_neighbor(villes, distances)
+    chemin_ins, dist_ins, t_ins = insertion_heuristique(villes, distances)
+
+    print("🔹 Nearest Neighbor")
+    print(f"  Distance totale : {dist_nn:.2f}")
+    print(f"  Temps d'exécution : {t_nn:.4f} s\n")
+
+    print("🔹 Insertion Heuristique")
+    print(f"  Distance totale : {dist_ins:.2f}")
+    print(f"  Temps d'exécution : {t_ins:.4f} s\n")
