@@ -83,3 +83,17 @@ print(f"Temps d'exécution : {temps:.4f} secondes")
 Cette heuristique a été testée avec les mêmes ensembles de villes que `nearest_neighbor`, et les performances ont été comparées en termes de:
 - Distance totale parcourue
 - Temps d’exécution
+
+## Visualisation
+
+Les fonctions de visualisation permettent de tracer les villes et les chemins trouvés par chaque heuristique à l’aide de `matplotlib`.
+
+### Fonction : `afficher_chemin(villes, chemin, titre, couleur, distance)`
+- Affiche les villes en 2D
+- Trace le chemin parcouru dans l’ordre
+- Affiche la distance totale dans le titre
+
+#### Exemple :
+```python
+from tsp_utils import afficher_chemin
+afficher_chemin(villes, chemin, titre="Nearest Neighbor", distance=distance_totale)
