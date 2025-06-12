@@ -141,7 +141,7 @@ def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=No
     plt.show()
 
 
-    #Comparaison 
+    # Comparaison les heuristique en termes de distance totale, temps d'exécution et qualité 
 import heapq
 
 def mst_borne_inferieure(distances):
