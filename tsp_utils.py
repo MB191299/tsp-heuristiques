@@ -2,6 +2,7 @@ import random
 import matplotlib.pyplot as plt
 import time
 import math
+import heapq
 
 # Générer n villes aléatoires dans un carré de 100x100
 def generer_villes(n, largeur=100, hauteur=100):
@@ -138,3 +139,33 @@ def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=No
     plt.legend()
     plt.axis("equal")
     plt.show()
+
+
+    #Comparaison 
+import heapq
+
+def mst_borne_inferieure(distances):
+    """
+    Calcule une borne inférieure pour le TSP via l'arbre couvrant minimal (MST).
+    Utilise l’algorithme de Prim.
+    """
+    n = len(distances)
+    visited = [False] * n
+    min_edge = [float('inf')] * n
+    min_edge[0] = 0
+    heap = [(0, 0)]
+    total = 0
+
+    while heap:
+        cout, u = heapq.heappop(heap)
+        if visited[u]:
+            continue
+        visited[u] = True
+        total += cout
+
+        for v in range(n):
+            if not visited[v] and distances[u][v] < min_edge[v]:
+                min_edge[v] = distances[u][v]
+                heapq.heappush(heap, (distances[u][v], v))
+
+    return total
