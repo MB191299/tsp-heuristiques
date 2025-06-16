@@ -42,3 +42,59 @@ print(f"Distance totale : {distance_totale:.2f}")
 print(f"Temps d'exécution : {temps:.4f} secondes")
 # tsp-heuristiques
 Projet de résolution heuristique du problème du voyageur de commerce
+
+```
+
+---
+
+## **Heuristique 2 : Insertion** 
+Cette seconde heuristique repose sur une stratégie incrémentale : on commence avec un sous-tour réduit (par exemple 2 ou 3 villes), puis on insère les autres villes une à une à l’endroit qui minimise l’augmentation de la distance totale du chemin.
+
+### Objectif
+Trouver un chemin plus optimisé que le Plus Proche Voisin (NN), en évitant les choix trop locaux dès le départ.
+
+### Fonction principale
+```python
+insertion_heuristique(villes, distances)
+```
+### Fonctionnement
+- Initialiser un cycle de 2 ou 3 villes.
+- À chaque itération, choisir une ville non encore insérée.
+- L’ajouter dans la position du tour actuel qui augmente le moins la distance totale.
+- Répéter jusqu’à avoir un tour complet.
+
+### Résultats retournés
+- `chemin` : liste des indices des villes dans l’ordre visité
+- `distance_totale` : longueur totale du chemin
+- `temps_execution` : durée du calcul
+
+### Exemple d'utilisation
+```python
+from tsp_utils import generer_villes, calculer_matrice_distances, insertion_heuristique
+
+villes = generer_villes(20)
+distances = calculer_matrice_distances(villes)
+chemin, distance_totale, temps = insertion_heuristique(villes, distances)
+
+print(f"Chemin : {chemin}")
+print(f"Distance totale : {distance_totale:.2f}")
+print(f"Temps d'exécution : {temps:.4f} secondes")
+```
+### Comparaison
+Cette heuristique a été testée avec les mêmes ensembles de villes que `nearest_neighbor`, et les performances ont été comparées en termes de:
+- Distance totale parcourue
+- Temps d’exécution
+
+## Visualisation
+
+Les fonctions de visualisation permettent de tracer les villes et les chemins trouvés par chaque heuristique à l’aide de `matplotlib`.
+
+### Fonction : `afficher_chemin(villes, chemin, titre, couleur, distance)`
+- Affiche les villes en 2D
+- Trace le chemin parcouru dans l’ordre
+- Affiche la distance totale dans le titre
+
+#### Exemple :
+```python
+from tsp_utils import afficher_chemin
+afficher_chemin(villes, chemin, titre="Nearest Neighbor", distance=distance_totale)

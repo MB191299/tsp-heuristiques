@@ -2,6 +2,7 @@ import random
 import matplotlib.pyplot as plt
 import time
 import math
+import heapq
 
 # Générer n villes aléatoires dans un carré de 100x100
 def generer_villes(n, largeur=100, hauteur=100):
@@ -117,3 +118,54 @@ def comparer_heuristiques(villes, distances):
     print("🔹 Insertion Heuristique")
     print(f"  Distance totale : {dist_ins:.2f}")
     print(f"  Temps d'exécution : {t_ins:.4f} s\n")
+    
+    # Visualisation du chemin
+def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=None):
+    xs = [villes[i][0] for i in chemin] + [villes[chemin[0]][0]]
+    ys = [villes[i][1] for i in chemin] + [villes[chemin[0]][1]]
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(*zip(*villes), c='black', zorder=2)
+    plt.plot(xs, ys, c=couleur, zorder=1, linewidth=2, marker='o', label="Chemin")
+
+    for i, (x, y) in enumerate(villes):
+        plt.text(x + 1, y + 1, str(i), fontsize=9)
+
+    titre_complet = f"{titre} – Distance : {distance:.2f}" if distance else titre
+    plt.title(titre_complet)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.grid(True)
+    plt.legend()
+    plt.axis("equal")
+    plt.show()
+
+
+    # Comparaison les heuristique en termes de distance totale, temps d'exécution et qualité 
+import heapq
+
+def mst_borne_inferieure(distances):
+    """
+    Calcule une borne inférieure pour le TSP via l'arbre couvrant minimal (MST).
+    Utilise l’algorithme de Prim.
+    """
+    n = len(distances)
+    visited = [False] * n
+    min_edge = [float('inf')] * n
+    min_edge[0] = 0
+    heap = [(0, 0)]
+    total = 0
+
+    while heap:
+        cout, u = heapq.heappop(heap)
+        if visited[u]:
+            continue
+        visited[u] = True
+        total += cout
+
+        for v in range(n):
+            if not visited[v] and distances[u][v] < min_edge[v]:
+                min_edge[v] = distances[u][v]
+                heapq.heappush(heap, (distances[u][v], v))
+
+    return total
