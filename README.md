@@ -42,3 +42,4 @@ print(f"Distance totale : {distance_totale:.2f}")
 print(f"Temps d'exécution : {temps:.4f} secondes")
 # tsp-heuristiques
 Projet de résolution heuristique du problème du voyageur de commerce
+
