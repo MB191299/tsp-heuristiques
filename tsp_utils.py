@@ -108,18 +108,34 @@ def insertion_heuristique(villes, distances):
 
 # Comparaison avec Nearest Neighbor
 def comparer_heuristiques(villes, distances):
+     # Exécution des heuristiques
     chemin_nn, dist_nn, t_nn = nearest_neighbor(villes, distances)
     chemin_ins, dist_ins, t_ins = insertion_heuristique(villes, distances)
 
+    # Calcul de la borne inférieure avec l'arbre couvrant minimal (MST)
+    borne = mst_borne_inferieure(distances)
+
+    # Calcul des ratios distance / borne inférieure
+    qualite_nn = dist_nn / borne
+    qualite_ins = dist_ins / borne
+
+    # Affichage des résultats
     print("🔹 Nearest Neighbor")
     print(f"  Distance totale : {dist_nn:.2f}")
     print(f"  Temps d'exécution : {t_nn:.4f} s\n")
+    print(f"  ➤ Ratio distance / borne : {qualite_nn:.2f}\n")
 
     print("🔹 Insertion Heuristique")
     print(f"  Distance totale : {dist_ins:.2f}")
     print(f"  Temps d'exécution : {t_ins:.4f} s\n")
-    
+    print(f"  ➤ Ratio distance / borne : {qualite_ins:.2f}\n")
+
+    print(f" Borne inférieure estimée (MST) : {borne:.2f}")
+
     # Visualisation du chemin
+    afficher_chemin(villes, chemin_nn, titre="Nearest Neighbor", couleur='blue', distance=dist_nn)
+    afficher_chemin(villes, chemin_ins, titre="Heuristique d'Insertion", couleur='green', distance=dist_ins)
+    
 def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=None):
     xs = [villes[i][0] for i in chemin] + [villes[chemin[0]][0]]
     ys = [villes[i][1] for i in chemin] + [villes[chemin[0]][1]]
@@ -141,9 +157,7 @@ def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=No
     plt.show()
 
 
-    # Comparaison les heuristique en termes de distance totale, temps d'exécution et qualité 
-import heapq
-
+# Comparaison les heuristique en termes de distance totale, temps d'exécution et qualité 
 def mst_borne_inferieure(distances):
     """
     Calcule une borne inférieure pour le TSP via l'arbre couvrant minimal (MST).

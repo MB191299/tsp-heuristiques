@@ -40,8 +40,6 @@ chemin, distance_totale, temps = nearest_neighbor(villes, distances)
 print(f"Chemin : {chemin}")
 print(f"Distance totale : {distance_totale:.2f}")
 print(f"Temps d'exécution : {temps:.4f} secondes")
-# tsp-heuristiques
-Projet de résolution heuristique du problème du voyageur de commerce
 
 ```
 
@@ -84,6 +82,14 @@ print(f"Temps d'exécution : {temps:.4f} secondes")
 Cette heuristique a été testée avec les mêmes ensembles de villes que `nearest_neighbor`, et les performances ont été comparées en termes de:
 - Distance totale parcourue
 - Temps d’exécution
+
+## 📈 Comparaison des Heuristiques
+
+| Heuristique        | Distance (ex. 20 villes) | Temps (s) | Remarques                      |
+|--------------------|--------------------------|-----------|--------------------------------|
+| Plus Proche Voisin | 168.2                    | 0.0012    | Rapide, mais solutions locales |
+| Insertion          | 150.6                    | 0.0021    | Mieux optimisé globalement     |
+
 
 ## Visualisation
 
