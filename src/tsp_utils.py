@@ -4,8 +4,18 @@ import time
 import math
 import heapq
 
-# Générer n villes aléatoires dans un carré de 100x100
 def generer_villes(n, largeur=100, hauteur=100):
+    """
+    Génère aléatoirement n villes dans un rectangle de dimensions données.
+
+    Paramètres :
+    - n (int) : nombre de villes à générer.
+    - largeur (float) : largeur maximale du plan (par défaut 100).
+    - hauteur (float) : hauteur maximale du plan (par défaut 100).
+
+    Retour :
+    - List[Tuple[float, float]] : liste des coordonnées (x, y) des villes générées.
+    """
     villes = []
     for i in range(n):
         x = random.uniform(0, largeur)
@@ -14,8 +24,16 @@ def generer_villes(n, largeur=100, hauteur=100):
     return villes
 
 
-# Affichage
 def afficher_villes(villes):
+    """
+    Affiche les villes sur un plan 2D avec leurs indices.
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : liste des coordonnées des villes.
+    
+    Retour :
+    - Aucun (affichage graphique via matplotlib).
+    """
     xs, ys = zip(*villes)
     plt.figure(figsize=(6,6))
     plt.scatter(xs, ys, color='blue')
@@ -29,6 +47,15 @@ def afficher_villes(villes):
 
 
 def calculer_matrice_distances(villes):
+    """
+    Calcule la matrice des distances euclidiennes entre chaque paire de villes.
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : liste des coordonnées des villes.
+
+    Retour :
+    - List[List[float]] : matrice des distances entre les villes.
+    """
     n = len(villes)
     distances = [[0.0] * n for _ in range(n)]
     for i in range(n):
@@ -39,13 +66,24 @@ def calculer_matrice_distances(villes):
                 distances[i][j] = math.dist((xi, yi), (xj, yj))
     return distances
 
-# Heuristique : Plus proche voisin
 def nearest_neighbor(villes, distances):
+    """
+    Résout le problème du TSP à l’aide de l’algorithme du plus proche voisin.
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : liste des coordonnées des villes.
+    - distances (List[List[float]]) : matrice des distances entre les villes.
+
+    Retour :
+    - chemin (List[int]) : ordre des villes visitées (terminé par un retour au départ).
+    - total_distance (float) : distance totale du circuit.
+    - execution_time (float) : durée d’exécution de l’algorithme en secondes.
+    """
     start_time = time.time()
 
     n = len(villes)
     visited = [False] * n
-    chemin = [0]  # Commencer à la ville 0
+    chemin = [0]  # Commence à la ville 0
     visited[0] = True
     total_distance = 0
 
@@ -69,9 +107,19 @@ def nearest_neighbor(villes, distances):
     execution_time = time.time() - start_time
     return chemin, total_distance, execution_time
 
-# Heuristique d'Insertion
 def insertion_heuristique(villes, distances):
-    import time
+    """
+    Résout le problème du TSP en utilisant l’heuristique d’insertion.
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : liste des coordonnées des villes.
+    - distances (List[List[float]]) : matrice des distances entre les villes.
+
+    Retour :
+    - tour (List[int]) : ordre des villes visitées, commençant et terminant à la même ville.
+    - total_distance (float) : distance totale du circuit.
+    - execution_time (float) : durée d’exécution de l’algorithme en secondes.
+    """
     start_time = time.time()
     n = len(villes)
 
@@ -106,8 +154,22 @@ def insertion_heuristique(villes, distances):
     execution_time = time.time() - start_time
     return tour, total_distance, execution_time
 
-# Comparaison avec Nearest Neighbor
 def comparer_heuristiques(villes, distances):
+    """
+    Compare les deux heuristiques (Nearest Neighbor et Insertion) sur un même ensemble de villes.
+
+    Affiche pour chaque méthode :
+    - la distance totale du circuit
+    - le temps d'exécution
+    - le ratio par rapport à une borne inférieure estimée (via MST)
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : liste des coordonnées des villes.
+    - distances (List[List[float]]) : matrice des distances.
+
+    Retour :
+    - Aucun (affiche les résultats et les tracés).
+    """
      # Exécution des heuristiques
     chemin_nn, dist_nn, t_nn = nearest_neighbor(villes, distances)
     chemin_ins, dist_ins, t_ins = insertion_heuristique(villes, distances)
@@ -137,12 +199,25 @@ def comparer_heuristiques(villes, distances):
     afficher_chemin(villes, chemin_ins, titre="Heuristique d'Insertion", couleur='green', distance=dist_ins)
     
 def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=None):
-    xs = [villes[i][0] for i in chemin] + [villes[chemin[0]][0]]
-    ys = [villes[i][1] for i in chemin] + [villes[chemin[0]][1]]
+    """
+    Affiche un chemin TSP sur la carte des villes.
+
+    Paramètres :
+    - villes (List[Tuple[float, float]]) : coordonnées des villes.
+    - chemin (List[int]) : ordre des villes visitées.
+    - titre (str) : titre du graphique (facultatif).
+    - couleur (str) : couleur de la ligne du chemin.
+    - distance (float) : distance totale affichée dans le titre (facultatif).
+
+    Retour :
+    - Aucun (affichage graphique via matplotlib).
+    """
+    xs = [villes[i][0] for i in chemin]
+    ys = [villes[i][1] for i in chemin]
 
     plt.figure(figsize=(8, 6))
     plt.scatter(*zip(*villes), c='black', zorder=2)
-    plt.plot(xs, ys, c=couleur, zorder=1, linewidth=2, marker='o', label="Chemin")
+    plt.plot(xs, ys, c=couleur, zorder=1, linewidth=2, label="Chemin")
 
     for i, (x, y) in enumerate(villes):
         plt.text(x + 1, y + 1, str(i), fontsize=9)
@@ -156,12 +231,15 @@ def afficher_chemin(villes, chemin, titre="Circuit", couleur='blue', distance=No
     plt.axis("equal")
     plt.show()
 
-
-# Comparaison les heuristique en termes de distance totale, temps d'exécution et qualité 
 def mst_borne_inferieure(distances):
     """
-    Calcule une borne inférieure pour le TSP via l'arbre couvrant minimal (MST).
-    Utilise l’algorithme de Prim.
+    Calcule une borne inférieure pour le TSP à l'aide de l'arbre couvrant minimal (MST) via l’algorithme de Prim.
+
+    Paramètres :
+    - distances (List[List[float]]) : matrice des distances entre les villes.
+
+    Retour :
+    - total (float) : poids total de l’arbre couvrant minimal (borne inférieure pour le TSP).
     """
     n = len(distances)
     visited = [False] * n
@@ -183,3 +261,12 @@ def mst_borne_inferieure(distances):
                 heapq.heappush(heap, (distances[u][v], v))
 
     return total
+
+# ================================
+# Exécution principale
+# ================================
+if __name__ == "__main__":
+    villes = generer_villes(15)
+    afficher_villes(villes)
+    distances = calculer_matrice_distances(villes)
+    comparer_heuristiques(villes, distances)
